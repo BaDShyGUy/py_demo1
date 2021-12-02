@@ -18,3 +18,38 @@ Also, finds the number of satisfied respondents.
 * Loop through local dictionary variable for .items().
   * If the key with .lower() NOT contains 'dissatisfied' (would pick-up both satisfied and dissatisfied if looking for just 'satisfied') then add the value of that key (number of respondents who selected that response) to satisfied variable.
 * Return desired data in a tuple.
+```python
+def compute_data(file):
+    """
+    Read through a file and split and strip to
+    find the avg, min, and max values of
+    salaries
+    Also find the satisfaction of all the
+    respondents in the file, return only
+    the satisfied respondents
+    :param file: File to read data from
+    :return: Max, min, and avg salaries as floats in a tuple
+    also return number of satisfied respondents
+    """
+    salaries = []
+    satisfaction = {}
+    satisfied = 0
+    with open(file, encoding='utf-8') as fin:
+        lines = fin.readlines()
+
+        for line in lines[1:]:
+            new_line = line.strip().split('|')
+            salaries.append(float(new_line[4]))
+            if str(new_line[2]) not in satisfaction:
+                satisfaction[str(new_line[2])] = 0
+            satisfaction[str(new_line[2])] += 1
+
+        max_salary = max(salaries)
+        min_salary = min(salaries)
+        avg_salary = sum(salaries) / len(salaries)
+
+        for key, val in satisfaction.items():
+            if not key.lower().__contains__('dissatisfied'):
+                satisfied += val
+        return max_salary, min_salary, avg_salary, satisfied
+```
